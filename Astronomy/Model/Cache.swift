@@ -12,6 +12,7 @@ class Cache<Key: Hashable, Value> {
     
     func cache(value: Value, for key: Key) {
         cache[key] = value
+        //Testing
     }
     
     func value(for key: Key) -> Value? {
