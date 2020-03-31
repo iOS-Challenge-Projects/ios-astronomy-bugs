@@ -28,22 +28,30 @@ class PhotosCollectionViewController: UIViewController, UICollectionViewDataSour
     
     @IBAction func goToPreviousSol(_ sender: Any?) {
         guard let solDescriptions = roverInfo?.solDescriptions else { return }
-        guard let sol = solDescription?.sol, sol > 0 else {
+        
+        
+        guard let currentDescription = solDescription,
+        let index = solDescriptions.firstIndex(of: currentDescription),
+        index > 0 else {
             solDescription = solDescriptions.first
             return
         }
         
-        solDescription = solDescriptions[sol-1]
+        solDescription = solDescriptions[index - 1]
     }
     
     @IBAction func goToNextSol(_ sender: Any?) {
         guard let solDescriptions = roverInfo?.solDescriptions else { return }
-        guard let sol = solDescription?.sol, sol < solDescriptions.count else {
+        
+        
+        guard let currentDescription = solDescription,
+            let index = solDescriptions.firstIndex(of: currentDescription),
+            index < solDescriptions.count - 1 else {
             solDescription = solDescriptions.last
             return
         }
         
-        solDescription = solDescriptions[sol+1]
+        solDescription = solDescriptions[index + 1]
     }
     
     // UICollectionViewDataSource/Delegate
@@ -66,6 +74,11 @@ class PhotosCollectionViewController: UIViewController, UICollectionViewDataSour
     }
     
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        
+        guard indexPath.item < photoReferences.count else { return }
+        
+        //TODO: Go through all references to see why this is occuring
+        
         let photoRef = photoReferences[indexPath.item]
         operations[photoRef.id]?.cancel()
     }
